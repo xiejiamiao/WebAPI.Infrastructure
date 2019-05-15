@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebAPI.Infrastructure.Database\WebAPI.Infrastructure.Database.csproj" />
+      <ProjectReference Include="..\WebAPI.Infrastructure.Interfaces\WebAPI.Infrastructure.Interfaces.csproj" />
+      <ProjectReference Include="..\WebAPI.Infrastructure.ModelDomain\WebAPI.Infrastructure.ModelDomain.csproj" />
+    </ItemGroup>
+
+</Project>

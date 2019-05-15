@@ -1,0 +1,130 @@
+2019-05-15 19:07:41.965 +08:00 [INF] User profile is available. Using '/Users/jiamiao.x/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2019-05-15 19:07:44.375 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/  
+2019-05-15 19:07:44.842 +08:00 [INF] Request finished in 469.8026ms 404 
+2019-05-15 19:07:51.494 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/solution  
+2019-05-15 19:07:51.499 +08:00 [INF] Request finished in 5.8711ms 404 
+2019-05-15 19:08:00.430 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/home  
+2019-05-15 19:08:00.435 +08:00 [INF] Request finished in 7.5478ms 404 
+2019-05-15 19:08:10.674 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/api/home  
+2019-05-15 19:08:10.802 +08:00 [INF] Route matched with {action = "Get", controller = "Solution"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway)
+2019-05-15 19:08:10.838 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) - Validation state: "Valid"
+2019-05-15 19:08:10.898 +08:00 [INF] Executed action method WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 8.2066ms.
+2019-05-15 19:08:10.925 +08:00 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2019-05-15 19:08:10.972 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) in 155.39430000000002ms
+2019-05-15 19:08:11.009 +08:00 [INF] Request finished in 336.9024ms 200 text/plain; charset=utf-8
+2019-05-15 19:09:00.799 +08:00 [INF] User profile is available. Using '/Users/jiamiao.x/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2019-05-15 19:09:02.810 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/  
+2019-05-15 19:09:03.267 +08:00 [INF] Request finished in 462.7921ms 404 
+2019-05-15 19:09:06.535 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/api/home  
+2019-05-15 19:09:06.612 +08:00 [INF] Route matched with {action = "Get", controller = "Solution"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway)
+2019-05-15 19:09:06.663 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) - Validation state: "Valid"
+2019-05-15 19:09:06.749 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) in 129.0971ms
+2019-05-15 19:09:06.761 +08:00 [ERR] API No Working...
+System.Exception: API No Working...
+   at WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get() in /Users/jiamiao.x/repo/demo/WebAPI.Infrastructure/WebAPI.Infrastructure.Gateway/Controllers/SolutionController.cs:line 13
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at WebAPI.Infrastructure.Gateway.Middelwares.ExceptionHandleMiddleware.Invoke(HttpContext httpContext) in /Users/jiamiao.x/repo/demo/WebAPI.Infrastructure/WebAPI.Infrastructure.Gateway/Middelwares/ExceptionHandleMiddleware.cs:line 25
+2019-05-15 19:09:06.885 +08:00 [INF] Request finished in 349.8742ms 500 application/json
+2019-05-15 19:09:23.877 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:8080/api/home  
+2019-05-15 19:09:23.908 +08:00 [INF] Request finished in 39.4397ms 307 
+2019-05-15 19:09:23.934 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/api/home  
+2019-05-15 19:09:23.949 +08:00 [INF] Route matched with {action = "Get", controller = "Solution"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway)
+2019-05-15 19:09:23.952 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) - Validation state: "Valid"
+2019-05-15 19:09:23.956 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) in 5.9218ms
+2019-05-15 19:09:23.958 +08:00 [ERR] API No Working...
+System.Exception: API No Working...
+   at WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get() in /Users/jiamiao.x/repo/demo/WebAPI.Infrastructure/WebAPI.Infrastructure.Gateway/Controllers/SolutionController.cs:line 13
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at WebAPI.Infrastructure.Gateway.Middelwares.ExceptionHandleMiddleware.Invoke(HttpContext httpContext) in /Users/jiamiao.x/repo/demo/WebAPI.Infrastructure/WebAPI.Infrastructure.Gateway/Middelwares/ExceptionHandleMiddleware.cs:line 25
+2019-05-15 19:09:23.968 +08:00 [INF] Request finished in 33.5423ms 500 application/json
+2019-05-15 19:09:46.186 +08:00 [INF] User profile is available. Using '/Users/jiamiao.x/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2019-05-15 19:09:47.797 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/  
+2019-05-15 19:09:48.167 +08:00 [INF] Request finished in 375.0949ms 404 
+2019-05-15 19:09:57.269 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/api/home  
+2019-05-15 19:09:57.333 +08:00 [INF] Route matched with {action = "Get", controller = "Solution"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway)
+2019-05-15 19:09:57.371 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) - Validation state: "Valid"
+2019-05-15 19:09:57.409 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get (WebAPI.Infrastructure.Gateway) in 64.3064ms
+2019-05-15 19:09:57.415 +08:00 [ERR] API No Working...
+System.Exception: API No Working...
+   at WebAPI.Infrastructure.Gateway.Controllers.SolutionController.Get() in /Users/jiamiao.x/repo/demo/WebAPI.Infrastructure/WebAPI.Infrastructure.Gateway/Controllers/SolutionController.cs:line 13
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at WebAPI.Infrastructure.Gateway.Middelwares.ExceptionHandleMiddleware.Invoke(HttpContext httpContext) in /Users/jiamiao.x/repo/demo/WebAPI.Infrastructure/WebAPI.Infrastructure.Gateway/Middelwares/ExceptionHandleMiddleware.cs:line 25
+2019-05-15 19:09:57.501 +08:00 [INF] Request finished in 232.2887ms 500 application/json
+2019-05-15 22:11:21.061 +08:00 [INF] User profile is available. Using '/Users/jiamiao.x/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2019-05-15 22:11:27.024 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/  
+2019-05-15 22:11:27.959 +08:00 [INF] Request finished in 939.1454ms 404 
+2019-05-15 22:12:53.691 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/api/orders  
+2019-05-15 22:12:54.138 +08:00 [INF] Route matched with {action = "Get", controller = "Order"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway)
+2019-05-15 22:12:54.672 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway) - Validation state: "Valid"
+2019-05-15 22:12:55.029 +08:00 [WRN] No type was specified for the decimal column 'ShippingAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values using 'HasColumnType()'.
+2019-05-15 22:12:55.029 +08:00 [WRN] No type was specified for the decimal column 'TotalAmount' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values using 'HasColumnType()'.
+2019-05-15 22:12:55.156 +08:00 [INF] Entity Framework Core 2.2.4-servicing-10062 initialized 'SolutionDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: MigrationsAssembly=WebAPI.Infrastructure.Gateway 
+2019-05-15 22:12:56.171 +08:00 [INF] Executed DbCommand (75ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [o].[Id], [o].[OrderNo], [o].[ReciverCity], [o].[ReciverDetailAddress], [o].[ReciverDistrict], [o].[ReciverMobile], [o].[ReciverName], [o].[ReciverProvince], [o].[ShippingAmount], [o].[TotalAmount]
+FROM [Orders] AS [o]
+2019-05-15 22:12:56.295 +08:00 [INF] Executed action method WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 1573.3788000000002ms.
+2019-05-15 22:12:56.484 +08:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[WebAPI.Infrastructure.DomainModel.Order, WebAPI.Infrastructure.ModelDomain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2019-05-15 22:12:56.814 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway) in 2660.4054ms
+2019-05-15 22:12:56.843 +08:00 [INF] Request finished in 3163.1202ms 200 application/json; charset=utf-8
+2019-05-15 22:16:20.689 +08:00 [INF] Request starting HTTP/1.1 POST https://localhost:8081/api/orders?OrderNo=thisisorderno&ReciverName=xiejiamiao&ReciverMobile=13510380822&ReciverProvince=%E5%B9%BF%E4%B8%9C%E7%9C%81&ReciverCity=%E6%B7%B1%E5%9C%B3%E5%B8%82&ReciverDistrict=%E5%8D%97%E5%B1%B1%E5%8C%BA&ReciverDetailAddress=%E4%B8%9C%E6%BB%A8%E8%B7%AF%E6%B7%B1%E5%9C%B3%E6%B9%BE1%E5%8F%B7&TotalAmount=11234.32&ShippingAmount=0  0
+2019-05-15 22:16:20.857 +08:00 [INF] Route matched with {action = "Post", controller = "Order"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.OrderController.Post (WebAPI.Infrastructure.Gateway)
+2019-05-15 22:16:21.062 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.OrderController.Post (WebAPI.Infrastructure.Gateway) with arguments (["WebAPI.Infrastructure.DomainModel.Order"]) - Validation state: "Valid"
+2019-05-15 22:16:21.351 +08:00 [INF] Entity Framework Core 2.2.4-servicing-10062 initialized 'SolutionDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: MigrationsAssembly=WebAPI.Infrastructure.Gateway 
+2019-05-15 22:16:21.961 +08:00 [INF] Executed DbCommand (137ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (Size = 4000), @p7='?' (Size = 4000), @p8='?' (DbType = Decimal), @p9='?' (DbType = Decimal)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [Orders] ([Id], [OrderNo], [ReciverCity], [ReciverDetailAddress], [ReciverDistrict], [ReciverMobile], [ReciverName], [ReciverProvince], [ShippingAmount], [TotalAmount])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+2019-05-15 22:16:22.025 +08:00 [INF] Executed action method WebAPI.Infrastructure.Gateway.Controllers.OrderController.Post (WebAPI.Infrastructure.Gateway), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 869.91460000000006ms.
+2019-05-15 22:16:22.028 +08:00 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2019-05-15 22:16:22.034 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.OrderController.Post (WebAPI.Infrastructure.Gateway) in 1176.9031ms
+2019-05-15 22:16:22.037 +08:00 [INF] Request finished in 1350.7363ms 200 text/plain; charset=utf-8
+2019-05-15 22:22:53.161 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:8081/api/orders  
+2019-05-15 22:22:53.167 +08:00 [INF] Route matched with {action = "Get", controller = "Order"}. Executing action WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway)
+2019-05-15 22:22:53.172 +08:00 [INF] Executing action method WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway) - Validation state: "Valid"
+2019-05-15 22:22:53.182 +08:00 [INF] Entity Framework Core 2.2.4-servicing-10062 initialized 'SolutionDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: MigrationsAssembly=WebAPI.Infrastructure.Gateway 
+2019-05-15 22:22:53.525 +08:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [o].[Id], [o].[OrderNo], [o].[ReciverCity], [o].[ReciverDetailAddress], [o].[ReciverDistrict], [o].[ReciverMobile], [o].[ReciverName], [o].[ReciverProvince], [o].[ShippingAmount], [o].[TotalAmount]
+FROM [Orders] AS [o]
+2019-05-15 22:22:53.550 +08:00 [INF] Executed action method WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 377.4094ms.
+2019-05-15 22:22:53.551 +08:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[WebAPI.Infrastructure.DomainModel.Order, WebAPI.Infrastructure.ModelDomain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2019-05-15 22:22:53.610 +08:00 [INF] Executed action WebAPI.Infrastructure.Gateway.Controllers.OrderController.Get (WebAPI.Infrastructure.Gateway) in 442.074ms
+2019-05-15 22:22:53.611 +08:00 [INF] Request finished in 450.0067ms 200 application/json; charset=utf-8
