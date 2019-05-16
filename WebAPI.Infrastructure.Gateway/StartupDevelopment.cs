@@ -1,7 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,20 +27,36 @@ namespace WebAPI.Infrastructure.Gateway
         
         public void ConfigureServices(IServiceCollection services)
         {
+            // HTTPS Redirect DI
             services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 8081;
             });
-
+            
+            // EntityFramework Core DI
             services.AddDbContext<SolutionDbContext>(options =>
             {
                 options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("WebAPI.Infrastructure.Gateway"));
             });
-
+            
+            // Repository DI
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            // AutoMapper DI
+            services.AddAutoMapper(typeof(MappingProfile));
+            
+            // IUrlHelper DI
+            services.AddSingleton<IActionContextAccessor,ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
+            // MVC DI
             services.AddMvc(options =>
             {
                 options.ReturnHttpNotAcceptable = true;

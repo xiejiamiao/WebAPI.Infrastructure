@@ -4,5 +4,5 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>WebAPI.Infrastructure.DomainModel</RootNamespace>
     </PropertyGroup>
-
+    
 </Project>

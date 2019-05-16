@@ -1,8 +1,6 @@
-using System;
-
-namespace WebAPI.Infrastructure.DomainModel
+namespace WebAPI.Infrastructure.DomainModel.QueryParameter
 {
-    public class Order:BaseEntity
+    public class OrderQueryParameter : BaseQueryParameter
     {
         public string OrderNo { get; set; }
         
@@ -16,10 +14,5 @@ namespace WebAPI.Infrastructure.DomainModel
         
         public string ReciverDistrict { get; set; }
         
-        public string ReciverDetailAddress { get; set; }
-        
-        public decimal TotalAmount { get; set; }
-        
-        public decimal ShippingAmount { get; set; }
     }
 }

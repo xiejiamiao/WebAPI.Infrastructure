@@ -1,13 +1,19 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebAPI.Infrastructure.Database;
 using WebAPI.Infrastructure.Gateway.Extensions;
+using WebAPI.Infrastructure.Interfaces;
+using WebAPI.Infrastructure.Repositories;
 
 namespace WebAPI.Infrastructure.Gateway
 {
@@ -41,6 +47,19 @@ namespace WebAPI.Infrastructure.Gateway
                 options.MaxAge = TimeSpan.FromDays(60);
                 options.ExcludedHosts.Add("example.com");
                 options.ExcludedHosts.Add("www.example.com");
+            });
+            
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddAutoMapper(typeof(MappingProfile));
+            
+            services.AddScoped<IActionContextAccessor,ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
             });
 
             services.AddMvc(options =>

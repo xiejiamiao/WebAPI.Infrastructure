@@ -1,4 +1,9 @@
+<!-- TOC -->
 
+- [项目框架](#项目框架)
+- [第三方库](#第三方库)
+
+<!-- /TOC -->
 
 ## 项目框架
 - WebAPI.Infrastructure.Database
@@ -35,3 +40,16 @@
             .UseSerilog();
             ```
 - **[AutoMap]**
+    - 安装类库
+        - AutoMapper.Extensions.Microsoft.DependencyInjection **(AutoMapper依赖注入)**
+    - 配置(简单配置)：
+        - 创建 `MappingProfile.cs`，继承自`Profile`类
+        - 在`MappingProfile`的构造方法中进行映射配置，例如：
+            ```
+            CreateMap<Order,OrderResourceModel>();
+            CreateMap<OrderResourceModel,Order>();
+            ```
+        - 在`Satrtup`的`ConfigureServices`中注入服务
+            ```
+            services.AddAutoMapper(typeof(MappingProfile));
+            ```
