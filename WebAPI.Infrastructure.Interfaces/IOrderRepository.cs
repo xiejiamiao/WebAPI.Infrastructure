@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
@@ -12,6 +13,6 @@ namespace WebAPI.Infrastructure.Interfaces
     {
         Task<PaginatedList<Order>> GetOrdersAsync(OrderQueryParameter orderQueryParameter);
         void AddOrderAsync(Order order);
-        Task<Order> GetOrderByIdAsync(string id);
+        Task<Order> GetOrderByIdAsync(Guid id);
     }
 }

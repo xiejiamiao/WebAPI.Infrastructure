@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -65,6 +66,13 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             return Ok("Handle success");
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var order = await _orderRepository.GetOrderByIdAsync(id);
+            var resource = _mapper.Map<Order,OrderResourceModel>(order);
+            return Ok(resource);
+        }
 
         private string CreateUrl(OrderQueryParameter parameter,PaginatedUrlType paginatedUrlType)
         {

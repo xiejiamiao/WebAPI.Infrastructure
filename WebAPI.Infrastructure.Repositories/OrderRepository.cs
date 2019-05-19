@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace WebAPI.Infrastructure.Repositories
             _dbContext.Orders.AddAsync(order);
         }
 
-        public async Task<Order> GetOrderByIdAsync(string id)
+        public async Task<Order> GetOrderByIdAsync(Guid id)
         {
             return await _dbContext.Orders.FindAsync(id);
         }
