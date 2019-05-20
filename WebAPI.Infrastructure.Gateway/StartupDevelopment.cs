@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 using WebAPI.Infrastructure.Database;
 using WebAPI.Infrastructure.Gateway.Extensions;
 using WebAPI.Infrastructure.Interfaces;
@@ -64,12 +65,18 @@ namespace WebAPI.Infrastructure.Gateway
                 options.ReturnHttpNotAcceptable = true;
                 options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 options.InputFormatters.Add(new XmlDataContractSerializerInputFormatter(options));
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
             // Property mapping DI
             var propertyMappingContainer = new PropertyMappingContainer();
             propertyMappingContainer.Register<OrderPropertyMapping>();
             services.AddSingleton<IPropertyMappingContainer>(propertyMappingContainer);
+
+            // Type Helper DI
+            services.AddTransient<ITypeHelperService, TypeHelperService>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

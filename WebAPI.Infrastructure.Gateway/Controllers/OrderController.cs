@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,9 @@ using WebAPI.Infrastructure.DomainModel;
 using WebAPI.Infrastructure.DomainModel.Pagination;
 using WebAPI.Infrastructure.Interfaces;
 using WebAPI.Infrastructure.ModelDomain.QueryParameter;
+using WebAPI.Infrastructure.Repositories.Extensions;
 using WebAPI.Infrastructure.ResourceModel;
+using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Infrastructure.Gateway.Controllers
 {
@@ -23,24 +26,41 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
         private readonly ILogger<OrderController> _logger;
         private readonly IMapper _mapper;
         private readonly IUrlHelper _urlHelper;
+        private readonly IPropertyMappingContainer _propertyMappingContainer;
+        private readonly ITypeHelperService _typeHelperService;
 
         public OrderController(IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
             ILogger<OrderController> logger,
             IMapper mapper,
-            IUrlHelper urlHelper)
+            IUrlHelper urlHelper,
+            IPropertyMappingContainer propertyMappingContainer,
+            ITypeHelperService typeHelperService)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
             _urlHelper = urlHelper;
+            _propertyMappingContainer = propertyMappingContainer;
+            _typeHelperService = typeHelperService;
         }
 
         
         [HttpGet(Name = "GetOrders")]
         public async Task<IActionResult> Get(OrderQueryParameter parameter)
         {
+            if (!_propertyMappingContainer.ValidateMappingExsitFor<OrderResourceModel, Order>(parameter.OrderBy))
+            {
+                return BadRequest("Can't finds fields for sorting");
+            }
+
+            if (!_typeHelperService.TypeHasProperties<OrderResourceModel>(parameter.Fields))
+            {
+                return BadRequest("Fields not exist");
+            }
+            
+            
             var paginatedList = await _orderRepository.GetOrdersAsync(parameter);
             var orderResourceModel = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResourceModel>>(paginatedList);
             
@@ -60,8 +80,24 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             }));
+            var shapeOrderResources = orderResourceModel.ToDynamicIEnumerable(parameter.Fields);
+            _logger.LogInformation(JsonConvert.SerializeObject(shapeOrderResources));
+
+            var shapedWithLinks = shapeOrderResources.Select(x =>
+            {
+                var dict = x as IDictionary<string, object>;
+                var orderLinks = CreateLinkForOrder((Guid) dict["Id"], parameter.Fields);
+                dict.Add("links", orderLinks);
+                return dict;
+            });
+            var links = CreateLinkForOrders(parameter, paginatedList.HasPrevious, paginatedList.HasNext);
+            var result = new
+            {
+                value = shapedWithLinks,
+                links
+            };
             
-            return Ok(orderResourceModel);
+            return Ok(result);
         }
 
         [HttpPost]
@@ -73,12 +109,20 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             return Ok("Handle success");
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        [HttpGet("{id}",Name = "GetOrder")]
+        public async Task<IActionResult> Get(Guid id, string fields = null)
         {
+            if (!_typeHelperService.TypeHasProperties<OrderResourceModel>(fields))
+            {
+                return BadRequest("Fields not exist");
+            }
             var order = await _orderRepository.GetOrderByIdAsync(id);
-            var resource = _mapper.Map<Order,OrderResourceModel>(order);
-            return Ok(resource);
+            var resource = _mapper.Map<Order, OrderResourceModel>(order);
+            var shapeOrderResource = resource.ToDynamic(fields);
+            var links = CreateLinkForOrder(id, fields);
+            var result = (IDictionary<string, object>) shapeOrderResource;
+            result.Add("link", links);
+            return Ok(result);
         }
 
         private string CreateOrderUrl(OrderQueryParameter parameter,PaginatedUrlType paginatedUrlType)
@@ -94,6 +138,35 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
                 default:
                     return _urlHelper.Link("GetOrders", parameter);
             }
+        }
+
+        private IEnumerable<LinkResourceModel> CreateLinkForOrder(Guid id, string fields = null)
+        {
+            var links = new List<LinkResourceModel>();
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                links.Add(new LinkResourceModel(_urlHelper.Link("GetOrder", new {id}), "self", "GET"));
+            }
+            else
+            {
+                links.Add(new LinkResourceModel(_urlHelper.Link("GetOrder", new {id, fields}), "self", "GET"));
+            }
+
+            links.Add(new LinkResourceModel(_urlHelper.Link("DeleteOrder", new {id}), "delete_order", "DELETE"));
+            return links;
+        }
+
+        private IEnumerable<LinkResourceModel> CreateLinkForOrders(OrderQueryParameter orderQueryParameter, bool hasPrevious, bool hasNext)
+        {
+            var links = new List<LinkResourceModel>
+            {
+                new LinkResourceModel(CreateOrderUrl(orderQueryParameter,PaginatedUrlType.CurrentPage),"self","GET")
+            };
+            if(hasPrevious)
+                links.Add(new LinkResourceModel(CreateOrderUrl(orderQueryParameter,PaginatedUrlType.PreviousPage),"previous_page","GET"));
+            if(hasNext)
+                links.Add(new LinkResourceModel(CreateOrderUrl(orderQueryParameter,PaginatedUrlType.NextPage),"next_page","GET"));
+            return links;
         }
     }
 }
