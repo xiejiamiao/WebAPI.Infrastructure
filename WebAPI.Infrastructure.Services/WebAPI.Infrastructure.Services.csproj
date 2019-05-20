@@ -2,12 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <RootNamespace>WebAPI.Infrastructure.ResourceModel</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\WebAPI.Infrastructure.ModelDomain\WebAPI.Infrastructure.ModelDomain.csproj" />
-      <ProjectReference Include="..\WebAPI.Infrastructure.Services\WebAPI.Infrastructure.Services.csproj" />
     </ItemGroup>
 
 </Project>

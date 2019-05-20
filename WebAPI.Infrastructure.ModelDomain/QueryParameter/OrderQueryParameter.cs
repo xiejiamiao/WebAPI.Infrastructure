@@ -1,4 +1,4 @@
-namespace WebAPI.Infrastructure.DomainModel.QueryParameter
+namespace WebAPI.Infrastructure.ModelDomain.QueryParameter
 {
     public class OrderQueryParameter : BaseQueryParameter
     {

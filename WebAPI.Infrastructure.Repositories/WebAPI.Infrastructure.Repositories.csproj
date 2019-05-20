@@ -8,6 +8,12 @@
       <ProjectReference Include="..\WebAPI.Infrastructure.Database\WebAPI.Infrastructure.Database.csproj" />
       <ProjectReference Include="..\WebAPI.Infrastructure.Interfaces\WebAPI.Infrastructure.Interfaces.csproj" />
       <ProjectReference Include="..\WebAPI.Infrastructure.ModelDomain\WebAPI.Infrastructure.ModelDomain.csproj" />
+      <ProjectReference Include="..\WebAPI.Infrastructure.ModelResource\WebAPI.Infrastructure.ModelResource.csproj" />
+      <ProjectReference Include="..\WebAPI.Infrastructure.Services\WebAPI.Infrastructure.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.14" />
     </ItemGroup>
 
 </Project>

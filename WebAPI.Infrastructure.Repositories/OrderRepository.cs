@@ -1,28 +1,35 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebAPI.Infrastructure.Database;
 using WebAPI.Infrastructure.DomainModel;
 using WebAPI.Infrastructure.DomainModel.Pagination;
-using WebAPI.Infrastructure.DomainModel.QueryParameter;
 using WebAPI.Infrastructure.Interfaces;
+using WebAPI.Infrastructure.ModelDomain.QueryParameter;
+using WebAPI.Infrastructure.Repositories.Extensions;
+using WebAPI.Infrastructure.ResourceModel;
+using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Infrastructure.Repositories
 {
     public class OrderRepository:IOrderRepository
     {
         private readonly SolutionDbContext _dbContext;
+        private readonly IPropertyMappingContainer _propertyMappingContainer;
+        private readonly ILogger<OrderRepository> _logger;
 
-        public OrderRepository(SolutionDbContext dbContext)
+        public OrderRepository(SolutionDbContext dbContext,IPropertyMappingContainer propertyMappingContainer,ILogger<OrderRepository> logger)
         {
             _dbContext = dbContext;
+            _propertyMappingContainer = propertyMappingContainer;
+            _logger = logger;
         }
 
         public async Task<PaginatedList<Order>> GetOrdersAsync(OrderQueryParameter orderQueryParameter)
         {
-            var query = _dbContext.Orders.AsQueryable();
+            var query = _dbContext.Orders.OrderBy(x=>x.Id).AsQueryable();
             
             if (!string.IsNullOrEmpty(orderQueryParameter.OrderNo))
                 query = query.Where(x=>x.OrderNo==orderQueryParameter.OrderNo);
@@ -37,7 +44,12 @@ namespace WebAPI.Infrastructure.Repositories
             if (!string.IsNullOrEmpty(orderQueryParameter.ReciverDistrict))
                 query = query.Where(x => x.ReciverDistrict == orderQueryParameter.ReciverDistrict);
 
-            var count = query.Count();
+            _logger.LogInformation($"Order By => {orderQueryParameter.OrderBy}");
+
+            query = query.ApplySort(orderQueryParameter.OrderBy,
+                _propertyMappingContainer.Resolve<OrderResourceModel, Order>());
+            
+            var count = await query.CountAsync();
 
             query = query.Skip(orderQueryParameter.PageIndex * orderQueryParameter.PageSize)
                 .Take(orderQueryParameter.PageSize);

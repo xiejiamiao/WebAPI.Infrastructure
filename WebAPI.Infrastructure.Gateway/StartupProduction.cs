@@ -54,7 +54,7 @@ namespace WebAPI.Infrastructure.Gateway
 
             services.AddAutoMapper(typeof(MappingProfile));
             
-            services.AddScoped<IActionContextAccessor,ActionContextAccessor>();
+            services.AddSingleton<IActionContextAccessor,ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(x =>
             {
                 var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;

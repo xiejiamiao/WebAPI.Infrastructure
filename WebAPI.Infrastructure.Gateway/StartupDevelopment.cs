@@ -13,6 +13,8 @@ using WebAPI.Infrastructure.Database;
 using WebAPI.Infrastructure.Gateway.Extensions;
 using WebAPI.Infrastructure.Interfaces;
 using WebAPI.Infrastructure.Repositories;
+using WebAPI.Infrastructure.ResourceModel.PropertyMapping;
+using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Infrastructure.Gateway
 {
@@ -63,6 +65,11 @@ namespace WebAPI.Infrastructure.Gateway
                 options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 options.InputFormatters.Add(new XmlDataContractSerializerInputFormatter(options));
             });
+
+            // Property mapping DI
+            var propertyMappingContainer = new PropertyMappingContainer();
+            propertyMappingContainer.Register<OrderPropertyMapping>();
+            services.AddSingleton<IPropertyMappingContainer>(propertyMappingContainer);
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

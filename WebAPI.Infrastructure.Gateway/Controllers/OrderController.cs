@@ -6,10 +6,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using WebAPI.Infrastructure.DomainModel;
 using WebAPI.Infrastructure.DomainModel.Pagination;
-using WebAPI.Infrastructure.DomainModel.QueryParameter;
 using WebAPI.Infrastructure.Interfaces;
+using WebAPI.Infrastructure.ModelDomain.QueryParameter;
 using WebAPI.Infrastructure.ResourceModel;
 
 namespace WebAPI.Infrastructure.Gateway.Controllers
@@ -42,8 +43,9 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
         {
             var paginatedList = await _orderRepository.GetOrdersAsync(parameter);
             var orderResourceModel = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResourceModel>>(paginatedList);
-            var previousPageLink = paginatedList.HasPrevious ? CreateUrl(parameter, PaginatedUrlType.PreviousPage) : null;
-            var nextPageLink = paginatedList.HasNext ? CreateUrl(parameter, PaginatedUrlType.NextPage) : null;
+            
+            var previousPageLink = paginatedList.HasPrevious ? CreateOrderUrl(parameter, PaginatedUrlType.PreviousPage) : null;
+            var nextPageLink = paginatedList.HasNext ? CreateOrderUrl(parameter, PaginatedUrlType.NextPage) : null;
             var meta = new
             {
                 paginatedList.PageIndex,
@@ -53,7 +55,12 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
                 previousPageLink,
                 nextPageLink
             };
-            Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(meta));
+            
+            Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(meta,new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            
             return Ok(orderResourceModel);
         }
 
@@ -74,7 +81,7 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             return Ok(resource);
         }
 
-        private string CreateUrl(OrderQueryParameter parameter,PaginatedUrlType paginatedUrlType)
+        private string CreateOrderUrl(OrderQueryParameter parameter,PaginatedUrlType paginatedUrlType)
         {
             switch (paginatedUrlType)
             {

@@ -5,7 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using WebAPI.Infrastructure.DomainModel;
 using WebAPI.Infrastructure.DomainModel.Pagination;
-using WebAPI.Infrastructure.DomainModel.QueryParameter;
+using WebAPI.Infrastructure.ModelDomain.QueryParameter;
 
 namespace WebAPI.Infrastructure.Interfaces
 {

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using WebAPI.Infrastructure.DomainModel;
 
-namespace WebAPI.Infrastructure.DomainModel.QueryParameter
+namespace WebAPI.Infrastructure.ModelDomain.QueryParameter
 {
-    public class BaseQueryParameter:INotifyPropertyChanged
+    public abstract class BaseQueryParameter:INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         
