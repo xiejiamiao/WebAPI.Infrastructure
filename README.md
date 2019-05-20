@@ -1,21 +1,23 @@
 <!-- TOC -->
 
-- [项目框架](#项目框架)
+- [功能点](#功能点)
+    - [排序](#排序)
 - [第三方库](#第三方库)
+    - [**[Serilog](https://serilog.net/)**](#seriloghttpsserilognet)
+    - [**[AutoMap](https://github.com/AutoMapper/AutoMapper.Extensions.Microsoft.DependencyInjection)**](#automaphttpsgithubcomautomapperautomapperextensionsmicrosoftdependencyinjection)
 
 <!-- /TOC -->
 
-## 项目框架
-- WebAPI.Infrastructure.Database
-- WebAPI.Infrastructure.Gateway
-- WebAPI.Infrastructure.Interfaces
-- WebAPI.Infrastructure.ModelDomain
-- WebAPI.Infrastructure.ModelResource
-- WebAPI.Infrastructure.Repositories
-
+## 功能点
+### 排序
+- Get接口使用排序功能示例：
+    - `api/order?orderBy=createdOn` -> 按createdOn正序排序
+    - `api/order?orderBy=createdOn desc` -> 按createdOn倒序排序
+    - `api/order?orderBy=createdOn,amount` -> 先按createdOn正序排序，再按amount正序排序
+    - `api/order?orderBy=createdOn desc,amount` -> 先按createdOn倒序排序，再按amount正序排序
 ## 第三方库
 
-- **[Serilog](https://serilog.net/)**
+### **[Serilog](https://serilog.net/)**
     - 安装类库:
         - Serilog **（日志主程序）**
         - Serilog.AspNetCore **（asp.net core类型项目配置使用，包含IWebHostBuilder的拓展方法）**
@@ -39,7 +41,7 @@
             .UseStartup(typeof(Startup).GetTypeInfo().Assembly.FullName)
             .UseSerilog();
             ```
-- **[AutoMap]**
+### **[AutoMap](https://github.com/AutoMapper/AutoMapper.Extensions.Microsoft.DependencyInjection)**
     - 安装类库
         - AutoMapper.Extensions.Microsoft.DependencyInjection **(AutoMapper依赖注入)**
     - 配置(简单配置)：
