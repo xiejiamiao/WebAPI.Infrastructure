@@ -27,7 +27,7 @@
 - 配置(简单配置)：
     - 在`Program.cs`中进行日志配置
     - 在`Main`方法中添加配置
-        ```
+        ```cs
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsort", LogEventLevel.Information)
@@ -37,7 +37,7 @@
             .CreateLogger();
         ```
     - 在`CreateWebHostBuilder`方法中使用`serilog`
-        ```
+        ```cs
         WebHost.CreateDefaultBuilder(args)
         .UseStartup(typeof(Startup).GetTypeInfo().Assembly.FullName)
         .UseSerilog();
@@ -49,12 +49,12 @@
 - 配置(简单配置)：
     - 创建 `MappingProfile.cs`，继承自`Profile`类
     - 在`MappingProfile`的构造方法中进行映射配置，例如：
-        ```
+        ```cs
         CreateMap<Order,OrderResourceModel>();
         CreateMap<OrderResourceModel,Order>();
         ```
     - 在`Satrtup`的`ConfigureServices`中注入服务
-        ```
+        ```cs
         services.AddAutoMapper(typeof(MappingProfile));
         ```
 
@@ -64,7 +64,7 @@
 - 配置
     - 创建继承`AbstractValidator<T>`的验证类，例如`AbstractValidator<OrderAddResource>`
     - 在类的构造方法中制定验证规则(示例,验证实体为 `OrderAddResource` )
-        ```
+        ```cs
         public OrderAddResourceValidator()
         {
             RuleFor(x => x.OrderNo)
@@ -76,7 +76,7 @@
         }
         ```
     - 在`Startup`中进行以来注入配置
-        ```
+        ```cs
         services.AddMvc(options=>{
             //mvc配置
         }).AddFluentValidation();
@@ -84,7 +84,7 @@
         services.AddTransient<IValidator<OrderAddResource>, OrderAddResourceValidator>(); //多个验证实体规则依次添加即可
         ```
     - 在`controller`中验证
-        ```
+        ```cs
         if (!ModelState.IsValid)
         {
             //进行验证不通过操作
