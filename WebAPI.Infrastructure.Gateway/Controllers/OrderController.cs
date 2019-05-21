@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using WebAPI.Infrastructure.DomainModel;
 using WebAPI.Infrastructure.DomainModel.Pagination;
+using WebAPI.Infrastructure.Gateway.Helpers;
 using WebAPI.Infrastructure.Interfaces;
 using WebAPI.Infrastructure.ModelDomain.QueryParameter;
 using WebAPI.Infrastructure.Repositories.Extensions;
 using WebAPI.Infrastructure.ResourceModel;
+using WebAPI.Infrastructure.ResourceModel.OrderResource;
 using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Infrastructure.Gateway.Controllers
@@ -46,9 +49,9 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             _typeHelperService = typeHelperService;
         }
 
-        
         [HttpGet(Name = "GetOrders")]
-        public async Task<IActionResult> Get(OrderQueryParameter parameter)
+        [RequestHeaderMatchingMediaType("Accept", new[] {"application/vnd.coName.hateoas+json"})]
+        public async Task<IActionResult> GetHateaos(OrderQueryParameter parameter)
         {
             if (!_propertyMappingContainer.ValidateMappingExsitFor<OrderResourceModel, Order>(parameter.OrderBy))
             {
@@ -60,6 +63,57 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
                 return BadRequest("Fields not exist");
             }
             
+            var paginatedList = await _orderRepository.GetOrdersAsync(parameter);
+            var orderResourceModel = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResourceModel>>(paginatedList);
+            
+            var previousPageLink = paginatedList.HasPrevious ? CreateOrderUrl(parameter, PaginatedUrlType.PreviousPage) : null;
+            var nextPageLink = paginatedList.HasNext ? CreateOrderUrl(parameter, PaginatedUrlType.NextPage) : null;
+            var meta = new
+            {
+                paginatedList.PageIndex,
+                paginatedList.PageSize,
+                paginatedList.TotalItemCount,
+                paginatedList.PageCount,
+            };
+            
+            Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(meta,new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
+            var shapeOrderResources = orderResourceModel.ToDynamicIEnumerable(parameter.Fields);
+            _logger.LogInformation(JsonConvert.SerializeObject(shapeOrderResources));
+
+            var shapedWithLinks = shapeOrderResources.Select(x =>
+            {
+                var dict = x as IDictionary<string, object>;
+                var orderLinks = CreateLinksForOrder((Guid) dict["Id"], parameter.Fields);
+                dict.Add("links", orderLinks);
+                return dict;
+            });
+            var links = CreateLinksForOrders(parameter, paginatedList.HasPrevious, paginatedList.HasNext);
+            var result = new
+            {
+                value = shapedWithLinks,
+                links
+            };
+            
+            return Ok(result);
+        }
+
+
+        [HttpGet(Name = "GetOrders")]
+        [RequestHeaderMatchingMediaType("Accept", new[] {"application/json"})]
+        public async Task<IActionResult> Get(OrderQueryParameter parameter)
+        {
+            if (!_propertyMappingContainer.ValidateMappingExsitFor<OrderResourceModel, Order>(parameter.OrderBy))
+            {
+                return BadRequest("Can't finds fields for sorting");
+            }
+
+            if (!_typeHelperService.TypeHasProperties<OrderResourceModel>(parameter.Fields))
+            {
+                return BadRequest("Fields not exist");
+            }
             
             var paginatedList = await _orderRepository.GetOrdersAsync(parameter);
             var orderResourceModel = _mapper.Map<IEnumerable<Order>, IEnumerable<OrderResourceModel>>(paginatedList);
@@ -81,32 +135,34 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             }));
             var shapeOrderResources = orderResourceModel.ToDynamicIEnumerable(parameter.Fields);
-            _logger.LogInformation(JsonConvert.SerializeObject(shapeOrderResources));
-
-            var shapedWithLinks = shapeOrderResources.Select(x =>
-            {
-                var dict = x as IDictionary<string, object>;
-                var orderLinks = CreateLinkForOrder((Guid) dict["Id"], parameter.Fields);
-                dict.Add("links", orderLinks);
-                return dict;
-            });
-            var links = CreateLinkForOrders(parameter, paginatedList.HasPrevious, paginatedList.HasNext);
-            var result = new
-            {
-                value = shapedWithLinks,
-                links
-            };
-            
-            return Ok(result);
+            return Ok(shapeOrderResources);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(OrderResourceModel model)
+        [HttpPost(Name = "CreateOrder")]
+        [RequestHeaderMatchingMediaType("Content-Type", new[] { "application/vnd.coName.order.create+json" })]
+        [RequestHeaderMatchingMediaType("Accept", new[] { "application/vnd.coName.hateoas+json" })]
+        public async Task<IActionResult> Post([FromBody] OrderAddResource model)
         {
-            var order = _mapper.Map<OrderResourceModel,Order>(model);
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return new MyUnprocessableEntityObjectResult(ModelState);
+            }
+            
+            var order = _mapper.Map<OrderAddResource,Order>(model);
             _orderRepository.AddOrderAsync(order);
-            await _unitOfWork.SaveChangesAsync();
-            return Ok("Handle success");
+            if(await _unitOfWork.SaveChangesAsync()<=0)
+                throw new Exception("Save Failed!");
+
+            var orderResource =_mapper.Map<Order,OrderResourceModel>(order);
+            var links = CreateLinksForOrder(order.Id);
+            var linkedOrderResoure = orderResource.ToDynamic() as IDictionary<string, object>;
+            linkedOrderResoure.Add("links",links);
+            return CreatedAtRoute("GetOrder", new {id = linkedOrderResoure["Id"]}, linkedOrderResoure);
         }
 
         [HttpGet("{id}",Name = "GetOrder")]
@@ -119,11 +175,73 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             var order = await _orderRepository.GetOrderByIdAsync(id);
             var resource = _mapper.Map<Order, OrderResourceModel>(order);
             var shapeOrderResource = resource.ToDynamic(fields);
-            var links = CreateLinkForOrder(id, fields);
+            var links = CreateLinksForOrder(id, fields);
             var result = (IDictionary<string, object>) shapeOrderResource;
             result.Add("link", links);
             return Ok(result);
         }
+
+        [HttpDelete("{id}",Name = "DeleteOrder")]
+        public async Task<IActionResult> DeleteOrder(Guid id)
+        {
+            var order = await _orderRepository.GetOrderByIdAsync(id);
+            if (order == null)
+                return NotFound();
+            
+            _orderRepository.DeleteOrderAsync(order);
+            if(await _unitOfWork.SaveChangesAsync()<=0)
+                throw new Exception($"Deleting order {id} failed when saving");
+            
+            return NoContent();
+        }
+
+        [HttpPut("{id}",Name = "UpdateOrder")]
+        [RequestHeaderMatchingMediaType("Content-Type", new[] { "application/vnd.coName.order.update+json" })]
+        public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] OrderUpdateResource orderResource)
+        {
+            if (orderResource == null)
+                return BadRequest();
+            if(!ModelState.IsValid)
+                return new MyUnprocessableEntityObjectResult(ModelState);
+
+            var order = await _orderRepository.GetOrderByIdAsync(id);
+            if (order == null)
+                return NotFound();
+
+            _mapper.Map(orderResource, order);
+            if(await _unitOfWork.SaveChangesAsync()<=0)
+                throw new Exception($"Update order {id} failed when saving");
+                
+            return NoContent();
+        }
+
+        [HttpPatch("{id}",Name = "PartiallyUpdateOrder")]
+        public async Task<IActionResult> PartiallyUpdate(Guid id, [FromBody] JsonPatchDocument<OrderUpdateResource> patchDoc)
+        {
+            if (patchDoc == null)
+                return BadRequest();
+
+            var order = await _orderRepository.GetOrderByIdAsync(id);
+            if (order == null)
+                return NotFound();
+
+            var orderToPatch = _mapper.Map<OrderUpdateResource>(order);
+            patchDoc.ApplyTo(orderToPatch, ModelState);
+            TryValidateModel(orderToPatch);
+            if(!ModelState.IsValid)
+                return new MyUnprocessableEntityObjectResult(ModelState);
+
+            _mapper.Map(orderToPatch, order);
+            _orderRepository.Update(order);
+            
+            if(await _unitOfWork.SaveChangesAsync() <= 0)
+                throw new Exception($"Update order {id} failed when saving");
+
+            return NoContent();
+        }
+
+
+
 
         private string CreateOrderUrl(OrderQueryParameter parameter,PaginatedUrlType paginatedUrlType)
         {
@@ -140,7 +258,7 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             }
         }
 
-        private IEnumerable<LinkResourceModel> CreateLinkForOrder(Guid id, string fields = null)
+        private IEnumerable<LinkResourceModel> CreateLinksForOrder(Guid id, string fields = null)
         {
             var links = new List<LinkResourceModel>();
             if (string.IsNullOrWhiteSpace(fields))
@@ -156,7 +274,7 @@ namespace WebAPI.Infrastructure.Gateway.Controllers
             return links;
         }
 
-        private IEnumerable<LinkResourceModel> CreateLinkForOrders(OrderQueryParameter orderQueryParameter, bool hasPrevious, bool hasNext)
+        private IEnumerable<LinkResourceModel> CreateLinksForOrders(OrderQueryParameter orderQueryParameter, bool hasPrevious, bool hasNext)
         {
             var links = new List<LinkResourceModel>
             {

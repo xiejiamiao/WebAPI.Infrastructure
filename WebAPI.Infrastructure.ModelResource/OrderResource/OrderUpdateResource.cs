@@ -1,11 +1,10 @@
 using System;
 
-namespace WebAPI.Infrastructure.ResourceModel
+namespace WebAPI.Infrastructure.ResourceModel.OrderResource
 {
-    public class OrderResourceModel
+    public class OrderUpdateResource
     {
-        public Guid Id { get; set; }
-        
+
         public string OrderNo { get; set; }
         
         public string ReciverName { get; set; }

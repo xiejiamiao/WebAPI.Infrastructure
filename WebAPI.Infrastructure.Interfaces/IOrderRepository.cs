@@ -14,5 +14,7 @@ namespace WebAPI.Infrastructure.Interfaces
         Task<PaginatedList<Order>> GetOrdersAsync(OrderQueryParameter orderQueryParameter);
         void AddOrderAsync(Order order);
         Task<Order> GetOrderByIdAsync(Guid id);
+        void DeleteOrderAsync(Order order);
+        void Update(Order order);
     }
 }

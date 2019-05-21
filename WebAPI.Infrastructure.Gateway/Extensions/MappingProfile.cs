@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebAPI.Infrastructure.DomainModel;
 using WebAPI.Infrastructure.ResourceModel;
+using WebAPI.Infrastructure.ResourceModel.OrderResource;
 
 namespace WebAPI.Infrastructure.Gateway.Extensions
 {
@@ -10,6 +11,12 @@ namespace WebAPI.Infrastructure.Gateway.Extensions
         {
             CreateMap<Order,OrderResourceModel>();
             CreateMap<OrderResourceModel,Order>();
+
+            CreateMap<Order, OrderAddResource>();
+            CreateMap<OrderAddResource, Order>();
+            
+            CreateMap<Order, OrderUpdateResource>();
+            CreateMap<OrderUpdateResource, Order>();
         }
     }
 }

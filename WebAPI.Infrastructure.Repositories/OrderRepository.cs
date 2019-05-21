@@ -10,6 +10,7 @@ using WebAPI.Infrastructure.Interfaces;
 using WebAPI.Infrastructure.ModelDomain.QueryParameter;
 using WebAPI.Infrastructure.Repositories.Extensions;
 using WebAPI.Infrastructure.ResourceModel;
+using WebAPI.Infrastructure.ResourceModel.OrderResource;
 using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Infrastructure.Repositories
@@ -67,6 +68,16 @@ namespace WebAPI.Infrastructure.Repositories
         public async Task<Order> GetOrderByIdAsync(Guid id)
         {
             return await _dbContext.Orders.FindAsync(id);
+        }
+
+        public void DeleteOrderAsync(Order order)
+        {
+            _dbContext.Orders.Remove(order);
+        }
+
+        public void Update(Order order)
+        {
+            _dbContext.Entry(order).State = EntityState.Modified;
         }
     }
 }

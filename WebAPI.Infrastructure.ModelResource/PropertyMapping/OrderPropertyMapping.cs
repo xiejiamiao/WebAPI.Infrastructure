@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using WebAPI.Infrastructure.DomainModel;
+using WebAPI.Infrastructure.ResourceModel.OrderResource;
 using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Infrastructure.ResourceModel.PropertyMapping
